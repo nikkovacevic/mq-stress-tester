@@ -1,0 +1,20 @@
+services:
+  artemis:
+    image: vromero/activemq-artemis
+    container_name: artemis
+    environment:
+      AMQ_USER: admin
+      AMQ_PASSWORD: admin
+    ports:
+      - "8161:8161"   # web console (http://localhost:8161, user=quser)
+      - "5672:5672"   # AMQP 1.0 (this is what Quarkus will connect to)
+      - "61616:61616"
+    volumes:
+      - ./artemis-config/broker.xml:/var/lib/artemis/etc/broker.xml
+
+  mq-stress-tester:
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.jvm
+    ports:
+      - "8080:8080"
